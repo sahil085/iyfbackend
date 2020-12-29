@@ -1,0 +1,52 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>UMANG Fest - Registration</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+</head>
+<body style="font-family: Poppins;">
+<div>
+    <div style="margin: 30px 0;">
+        <img src="https://res.cloudinary.com/dnuq1lgqs/image/upload/v1609229707/TicketBanner_wkqnbr.jpg" width="100%"/>
+    </div>
+    <div style="font-size: 21px; line-height:140%; margin: 40px 0;">
+        <strong style="font-size: 20px; display: block; text-align: center">Umang 2021 Entry Pass</strong>
+        <br/>
+        <span style="text-transform: uppercase; display: block; text-align: center">Ticket ID: <b
+                th:text="${user.registrationCode}"></b></span>
+        <span style="font-size: 10px; text-transform: uppercase; display: block; text-align: center;"
+              th:text="${user.name}"></span>
+        <span style="font-size: 10px; text-transform: uppercase; display: block; text-align: center" th:text="${user.contact}"></span>
+        <span style="font-size: 10px; text-transform: uppercase; display: block; text-align: center" th:text="${user.email}"></span>
+        <span style="font-size: 10px; text-transform: uppercase; display: block; text-align: center;" th:text="${user.location}"></span>
+        <hr/>
+        <a target="_blank"
+           style="display: block; text-align: center;" href="https://forms.gle/aPEEsy2vvaaLN2bY6">Register for Talent
+            Hunt and win exciting prizes!</a>
+        <hr/>
+    </div>
+    <div style="margin-top:30px; padding: 40px 0; background: #ffee58; width: 100%;">
+        <strong style="font-size: 36px; text-align: center; display: block;">Guidelines</strong>
+        <ul>
+            <li>It is compulsory to show your Entry Pass before entering into the venue hall.</li>
+            <li>
+                Entry will start from 2:00 PM till 3:30 PM and seats will be available only on "First Come First Serve
+                Basis" only.
+            </li>
+            <li>
+                Entry will be prohibited for anyone under any kind of intoxication or on drugs.
+            </li>
+            <li>
+                This entry Ticket is Non-Transferable. Only the registered individual will be allowed to enter through
+                the ticket. (Babies are strictly not allowed inside the event venue, please keep them safe with someone
+                at home).
+        </ul>
+    </div>
+</div>
+</body>
+</html>
