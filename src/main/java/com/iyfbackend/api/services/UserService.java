@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
@@ -76,6 +77,11 @@ public class UserService {
         Context context = new Context();
         context.setVariable("user", user);
         emailService.sendMail(user.getEmail(), subject, "registration.html", context);
+    }
+
+    @Scheduled(cron = "0 0/20 * 1/1 * ?")
+    public void schedulerToKeepSystemAlive() {
+        log.info("Executing scheduler to keep system alive");
     }
 
 }
