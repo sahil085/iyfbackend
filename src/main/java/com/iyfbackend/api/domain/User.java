@@ -29,5 +29,11 @@ public class User {
     private LocalDateTime registeredOn;
     @NotNull
     private String registrationCode;
+    @NotNull
+    @Column(columnDefinition = "bit default false")
+    private Boolean withBhagavadGita = false;
+    @NotNull
+    private Integer moneyPaid;
+    private String remarks;
 
 }

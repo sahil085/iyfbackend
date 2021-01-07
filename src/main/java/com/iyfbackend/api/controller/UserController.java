@@ -1,6 +1,5 @@
 package com.iyfbackend.api.controller;
 
-import com.iyfbackend.api.domain.User;
 import com.iyfbackend.api.dto.UserDTO;
 import com.iyfbackend.api.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +28,13 @@ public class UserController {
         return userService.registerUser(userDTO);
     }
 
+    @PostMapping("/update")
+    public String update(@Valid @RequestBody UserDTO userDTO) {
+        return userService.updateUser(userDTO);
+    }
+
     @GetMapping("/fetchAll")
-    public List<User> fetchAllUsers() {
+    public List<UserDTO> fetchAllUsers() {
         return userService.fetchAllUsers();
     }
 

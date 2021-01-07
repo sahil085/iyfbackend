@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class UserDTO {
 
+    private Long id;
     @NotNull(message = "Name cannot be null")
     private String name;
     private String email;
@@ -18,5 +19,13 @@ public class UserDTO {
     private String location;
     @NotNull(message = "Volunteer name cannot be null")
     private String registeredBy;
+    @NotNull(message = "Bhagavad gita field should not be null")
+    private Boolean withBhagavadGita;
+    @NotNull(message = "Money paid field cannot be null")
+    private Integer moneyPaid;
+    private String remarks;
+    private Integer moneyLeftToBePaid;
+    private String registrationCode;
+
 
 }
