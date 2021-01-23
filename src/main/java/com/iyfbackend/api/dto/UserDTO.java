@@ -27,5 +27,7 @@ public class UserDTO {
     private Integer moneyLeftToBePaid;
     private String registrationCode;
 
+    private Boolean isPresent = false;
+
 
 }

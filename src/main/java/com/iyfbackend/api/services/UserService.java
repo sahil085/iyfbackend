@@ -1,14 +1,16 @@
 package com.iyfbackend.api.services;
 
 import com.iyfbackend.api.domain.User;
+import com.iyfbackend.api.domain.UserAttendance;
 import com.iyfbackend.api.dto.UserDTO;
+import com.iyfbackend.api.repository.UserAttendanceRepo;
 import com.iyfbackend.api.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
@@ -27,6 +29,7 @@ public class UserService {
     private final UserRepo userRepo;
     private final EmailService emailService;
     private final SmsService smsService;
+    private final UserAttendanceRepo userAttendanceRepo;
 
     int length = 3;
     boolean useLetters = true;
@@ -104,6 +107,7 @@ public class UserService {
 
     public List<UserDTO> fetchAllUsers() {
         List<User> userList = userRepo.findAll();
+        List<UserAttendance> userAttendanceList = userAttendanceRepo.findAll();
         List<UserDTO> userDTOList = new ArrayList<>();
         ModelMapper mapper = new ModelMapper();
         userList.forEach(user -> {
@@ -113,10 +117,64 @@ public class UserService {
             } else {
                 userDTO.setMoneyLeftToBePaid(0);
             }
+            userAttendanceList
+                    .stream()
+                    .filter(userAttendance -> userAttendance.getUser().getId().equals(user.getId()))
+                    .findFirst()
+                    .map(UserAttendance::getIsPresent)
+                    .ifPresent(userDTO::setIsPresent);
             userDTOList.add(userDTO);
         });
 
         return userDTOList;
+    }
+
+    public String sendSmsToAllUsers(String sms) {
+        try {
+            List<Long> contactList = userRepo.findAllDistinctContacts();
+            smsService.sendSMS(sms, StringUtils.join(contactList, ","));
+            return "Sms sent to all registered users";
+        } catch (Exception e) {
+            log.error("Error in sending sms to all users :: {}", e.getMessage());
+            return "Error in sending sms to all users :: " + e.getMessage();
+        }
+    }
+
+    public UserDTO fetchById(Long userId) {
+        ModelMapper modelMapper = new ModelMapper();
+        User user = userRepo.findById(userId).orElse(null);
+        if (user == null) {
+            throw new RuntimeException("User not found with id : " + userId);
+        } else {
+            UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+            if (!user.getWithBhagavadGita()) {
+                userDTO.setMoneyLeftToBePaid(100 - user.getMoneyPaid());
+            } else {
+                userDTO.setMoneyLeftToBePaid(0);
+            }
+            UserAttendance userAttendance = userAttendanceRepo.findByUser_Id(userId);
+            if (userAttendance != null) {
+                userDTO.setIsPresent(userAttendance.getIsPresent());
+            }
+            return userDTO;
+        }
+    }
+
+    public String markAttendanceOfUser(Long userId, Boolean isPresent) {
+        User user = userRepo.findById(userId).orElse(null);
+        if (user == null) {
+            throw new RuntimeException("User not found with id : " + userId);
+        } else {
+            UserAttendance userAttendance = userAttendanceRepo.findByUser_Id(userId);
+            if (userAttendance == null) {
+                userAttendance = new UserAttendance();
+                userAttendance.setUser(user);
+            }
+            userAttendance.setIsPresent(isPresent);
+            userAttendanceRepo.saveAndFlush(userAttendance);
+            String attendance = isPresent ? "Present" : "Absent";
+            return user.getName() + " marked as : " + attendance;
+        }
     }
 
     private void generateRegistrationCode(User user) {
@@ -136,11 +194,6 @@ public class UserService {
         Context context = new Context();
         context.setVariable("user", user);
         emailService.sendMailWithAttachment(user.getEmail(), subject, "registration.html", "Umang_Brochure.pdf", context);
-    }
-
-    @Scheduled(cron = "0 0/20 * 1/1 * ?")
-    public void schedulerToKeepSystemAlive() {
-        log.info("Executing scheduler to keep system alive");
     }
 
 }

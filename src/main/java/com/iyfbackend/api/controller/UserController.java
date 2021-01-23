@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -38,4 +39,18 @@ public class UserController {
         return userService.fetchAllUsers();
     }
 
+    @PostMapping("/sendSMSToAll")
+    public String sendSmsToAll(@RequestBody Map<String, String> sms) {
+        return userService.sendSmsToAllUsers(sms.get("message"));
+    }
+
+    @GetMapping("/fetchById/{userId}")
+    public UserDTO fetchUserById(@PathVariable("userId") Long userId) {
+        return userService.fetchById(userId);
+    }
+
+    @PutMapping("/markAttendance/{userId}")
+    public String markUserAttendance(@PathVariable("userId") Long userId, @RequestBody Map<String, Boolean> attendance) {
+        return userService.markAttendanceOfUser(userId, attendance.get("isPresent"));
+    }
 }

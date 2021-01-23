@@ -12,4 +12,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     @Query(value = "select distinct registeredBy from User")
     List<String> findAllDistinctRegisteredBy();
+
+    @Query(value = "select distinct contact from User")
+    List<Long> findAllDistinctContacts();
 }
