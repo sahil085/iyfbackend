@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -24,8 +25,10 @@ public class UserDTO {
     @NotNull(message = "Money paid field cannot be null")
     private Integer moneyPaid;
     private String remarks;
+    private String institute;
     private Integer moneyLeftToBePaid;
     private String registrationCode;
+    private LocalDateTime registeredOn;
 
     private Boolean isPresent = false;
 

@@ -35,5 +35,6 @@ public class User {
     @NotNull
     private Integer moneyPaid;
     private String remarks;
+    private String institute;
 
 }
