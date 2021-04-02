@@ -1,5 +1,7 @@
 package com.iyfbackend.api.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iyfbackend.api.dto.UserDTO;
 import com.iyfbackend.api.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,17 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+
+    @PostMapping("/test")
+    public String test(@RequestBody Map<String, Object> data) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(data);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "error "+data;
+        }
+    }
 
     @GetMapping("/volunteers")
     public List<String> fetchAllVolunteers() {
